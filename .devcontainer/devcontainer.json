@@ -22,19 +22,23 @@
 	"forwardPorts": [ 8080 ],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "java -version",
+	"postCreateCommand": "chmod +x .devcontainer/git-config.sh && sh .devcontainer/git-config.sh",
 
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
-			"settings": {
-				"editor.mouseWheelZoom": true
-			},
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"vscjava.vscode-java-pack"
-			]
+				"vmware.vscode-boot-dev-pack"
+			],
+			"settings": {
+				"editor.mouseWheelZoom": true,
+				"java.maven.downloadSources": true,
+				"java.configuration.updateBuildConfiguration": "automatic",
+				"redhat.telemetry.enabled": false,
+				"java.compile.nullAnalysis.mode": "disabled"
+			}
 		}
 	}
 
