@@ -35,6 +35,9 @@
 			"settings": {
 				"editor.mouseWheelZoom": true,
 				"java.maven.downloadSources": true,
+				"editor.formatOnSave": true,
+				"git.autofetch": true,
+				"github.copilot.nextEditSuggestions.enabled":true,
 				"java.configuration.updateBuildConfiguration": "automatic",
 				"redhat.telemetry.enabled": false,
 				"java.compile.nullAnalysis.mode": "disabled"

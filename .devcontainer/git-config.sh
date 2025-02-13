@@ -3,8 +3,6 @@ git config --global merge.conflictstyle "diff3"
 git config --global merge.verbosity 3
 git config --global push.default "simple"
 git config --global push.followTags true
-# Using vim in interactive mode (e.g. rebase -i) for syntax highlighting
-git config --global sequence.editor "vim"
 git config --global status.relativePaths false
 git config --global status.showUntrackedFiles "all"
 git config --global diff.renames "copy"
@@ -15,19 +13,19 @@ git config --global fetch.prune true
 git config --global grep.lineNumber true
 git config --global grep.extendedRegexp true
 git config --global log.follow true
-git config --global log.date "format:%Y-%m-%d %H:%M:%S"
-git config --global blame.date "format:%Y-%m-%d %H:%M:%S"
+git config --global log.date "format-local:%Y-%m-%d %H:%M:%S"
+git config --global blame.date "format-local:%Y-%m-%d %H:%M:%S"
 git config --global color.ui "always"
 git config --global color.diff "auto"
 # The aligned & simple format works best if the window have at least 200 width
-git config --global pretty.aligned "format:%C(auto)%>|(20)%h %<|(147,trunc)%s %C(yellow)%<(12,trunc)%ad%x08%x08|%C(green)%cd %C(cyan)%<|(195,trunc)%an%x08%x08%C(bold blue)(%<|(200,trunc)%cn%x08%x08)%C(auto)%n%>|(23)          %<|(156,trunc)%d"
+git config --global pretty.aligned "format:%C(auto)%>|(20)%h %<|(136,trunc)%s %C(yellow)%<(22,trunc)%ad%x08%x08| %C(green)%cd %C(cyan)%<|(195,trunc)%an%x08%x08%C(bold blue)(%C(bold blue)%<|(202,trunc)%cn%x08%x08)%C(auto)%n%>|(23)          %<|(156,trunc)%d"
 git config --global pretty.simple "format:%C(auto)%h%d %<|(162,trunc)%s %C(green)(%cd) %C(cyan)%<|(199,trunc)%an"
 git config --global pretty.detail "format:%C(yellow) commit %C(auto)%H%d%n Author: %C(cyan)%an <%ae> %C(yellow)(%aD)%n%C(auto) Commit: %C(bold blue)%cn <%ce> %C(nobold green)(%cD)%n%n%w(0,1,2)%C(bold normal)%B%n"
 git config --global pretty.stashsimple "format:%C(auto)%h %C(bold)%gd: %gs %C(nobold green)(%ad) %C(nobold cyan)%an%n"
 git config --global pretty.stashmsg "format:%C(bold)%gd: %gs"
 # Should use together with "git log -g --date=<format>" to show the timestamp format, see alias.rl
 git config --global pretty.simplereflog "format:%C(auto)%h% %<(33,trunc)%d %C(green)%>>(22,ltrunc)%gd%C(auto) %<|(195,trunc)%gs%>>|(142)%x20%x08   %x08%C(dim white)%<|(199,trunc)%s"
-git config --global alias.br "branch -vv --sort=-committerdate --sort=-HEAD"
+git config --global alias.br "branch --all -vv --sort=-committerdate --sort=-HEAD"
 # Show status with 2 level log from HEAD
 git config --global alias.s '!num=$(git rev-parse HEAD^@ | wc -l); lg="git log --graph --date-order --pretty=aligned HEAD -n 3"; for i in $(seq 1 1 $num); do lg="$lg HEAD^$(($i))~^!"; done; eval $lg; echo; git status; exit 0;'
 # Show detailed status with 2 level log from HEAD & diff patch
