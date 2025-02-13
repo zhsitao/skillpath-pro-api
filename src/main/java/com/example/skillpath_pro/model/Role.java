@@ -19,6 +19,14 @@ public class Role {
     @Column(name = "category")
     private String category;
 
+    public Role() {
+    }
+
+    public Role(String title, String category) {
+        this.title = title;
+        this.category = category;
+    }
+
     public Long getRoleId() {
         return roleId;
     }
