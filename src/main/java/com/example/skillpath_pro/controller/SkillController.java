@@ -4,40 +4,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.skillpath_pro.model.Role;
+import com.example.skillpath_pro.model.Skill;
 import com.example.skillpath_pro.repository.RoleRepository;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/api/skills")
 @CrossOrigin(origins = "http://localhost:5173")
-public class RoleController {
+public class SkillController {
 
     @Autowired
     private RoleRepository roleRepository;
 
-    @GetMapping()
-    public ResponseEntity<Map<String, List<Map<String, Object>>>> getAllRoles() {
+    @GetMapping
+    public ResponseEntity<List<Skill>> getSkillsByRole(@RequestParam Long roleId) {
         try {
-            List<Role> roles = roleRepository.findAll();
-            if (roles.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-
-            Map<String, List<Map<String, Object>>> result = new HashMap<>();
-            roleRepository.findAll().forEach(role -> {
-                result.computeIfAbsent(role.getCategory(), _k -> new ArrayList<>())
-                        .add(Map.of("id", role.getRoleId(), "title", role.getTitle(), "category", role.getCategory()));
-            });
-
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(roleRepository.findById(roleId).map(Role::getSkills)
+                    .orElse(Collections.emptyList()).stream()
+                    .sorted(Comparator.comparingDouble(Skill::getPriority).reversed()).collect(Collectors.toList()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
