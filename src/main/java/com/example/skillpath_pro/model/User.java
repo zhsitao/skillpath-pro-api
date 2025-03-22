@@ -1,6 +1,7 @@
 package com.example.skillpath_pro.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,12 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(unique = true)
+    private String confirmationToken;
+
+    @Column
+    private LocalDateTime tokenExpiry;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -50,11 +57,36 @@ public class User {
         this.password = password;
     }
 
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    public LocalDateTime getTokenExpiry() {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry(LocalDateTime tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
