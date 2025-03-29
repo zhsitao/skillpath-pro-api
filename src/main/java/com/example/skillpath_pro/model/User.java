@@ -32,6 +32,18 @@ public class User {
     )
     private Set<Role> roles;
 
+    @Column(nullable = false)
+    private boolean active;
+
+    @Column(nullable = false)
+    private boolean locked = false;
+
+    @Column(nullable = false)
+    private int failedLoginAttempts = 0;
+
+    @Column
+    private LocalDateTime lockExpiry;
+
     // Getters and Setters
     public Long getUserId() {
         return userId;
@@ -80,7 +92,6 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-    private boolean active;
 
     public boolean isActive() {
         return active;
@@ -88,5 +99,29 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public LocalDateTime getLockExpiry() {
+        return lockExpiry;
+    }
+
+    public void setLockExpiry(LocalDateTime lockExpiry) {
+        this.lockExpiry = lockExpiry;
     }
 }
