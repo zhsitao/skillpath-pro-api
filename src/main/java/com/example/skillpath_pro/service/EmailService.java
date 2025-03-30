@@ -27,4 +27,11 @@ public class EmailService {
             System.err.println("Error sending email: " + e.getMessage());
         }
     }
+
+    public void simulateEmail(String to) {
+        // Simulate email sending by logging to the console
+        System.out.println("Simulating email to: " + to);
+        System.out.println("Subject: Welcome to Skillpath Pro");
+        System.out.println("Body: Thank you for signing up! Your account has been successfully created.");
+    }
 }

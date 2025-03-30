@@ -33,7 +33,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setConfirmationToken(TokenUtil.generateToken());
         user.setTokenExpiry(LocalDateTime.now().plusHours(24)); // Token expires in 24 hours
-        user.setActive(false); // User is inactive until email is confirmed
+        user.setActive(true); // User is inactive until email is confirmed
         userRepository.save(user);
 
         // Send confirmation email
