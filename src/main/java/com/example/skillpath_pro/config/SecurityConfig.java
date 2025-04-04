@@ -20,11 +20,11 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/signup", "/auth/login", "/auth/confirm").permitAll() // Public routes
-                .requestMatchers("/api/**").authenticated() // Secure API routes
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/**").permitAll() // Allow public access to auth endpoints
+                .requestMatchers("/profile/**").authenticated() // Require authentication for profile endpoints
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // REST APIs are stateless
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // REST APIs are stateless
+            .httpBasic(); // Or use JWT-based authentication
 
         return http.build();
     }

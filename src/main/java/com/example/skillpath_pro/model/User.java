@@ -44,6 +44,20 @@ public class User {
     @Column
     private LocalDateTime lockExpiry;
 
+    @Column(name = "career_stage")
+    private String careerStage; // e.g., "Recent Graduate", "Junior"
+
+    @Column(name = "work_experience")
+    private String workExperience; // e.g., "0-1 years", "1-3 years"
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_skills",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private Set<Skill> skills;
+
     // Getters and Setters
     public Long getUserId() {
         return userId;
@@ -123,5 +137,29 @@ public class User {
 
     public void setLockExpiry(LocalDateTime lockExpiry) {
         this.lockExpiry = lockExpiry;
+    }
+
+    public String getCareerStage() {
+        return careerStage;
+    }
+
+    public void setCareerStage(String careerStage) {
+        this.careerStage = careerStage;
+    }
+
+    public String getWorkExperience() {
+        return workExperience;
+    }
+
+    public void setWorkExperience(String workExperience) {
+        this.workExperience = workExperience;
+    }
+
+    public Set<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
 }

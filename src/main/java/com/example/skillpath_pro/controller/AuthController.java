@@ -1,6 +1,8 @@
 package com.example.skillpath_pro.controller;
 
+import com.example.skillpath_pro.model.Profile;
 import com.example.skillpath_pro.model.User;
+import com.example.skillpath_pro.repository.ProfileRepository;
 import com.example.skillpath_pro.repository.UserRepository;
 import com.example.skillpath_pro.service.AuthService;
 import com.example.skillpath_pro.service.EmailService;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +21,7 @@ import java.util.Map;
 public class AuthController {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
@@ -26,8 +30,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    public AuthController(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AuthController(UserRepository userRepository, ProfileRepository profileRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -57,6 +62,15 @@ public class AuthController {
         // Simulate email sending
         emailService.simulateEmail(user.getEmail());
 
+        // Create and associate a default profile
+        Profile profile = new Profile();
+        profile.setUser(user); // Link the profile to the user
+        profile.setCareerStage("Recent Graduate"); // Default career stage
+        profile.setSkills(new ArrayList<>()); // Empty skills list
+        profile.setWorkExperience("0-1 years"); // Default work experience
+        profileRepository.save(profile); // Save the profile in the database
+
+        // Return success response
         response.put("success", "true");
         response.put("message", "Signup successful! Email sent successfully.");
         return ResponseEntity.ok(response);

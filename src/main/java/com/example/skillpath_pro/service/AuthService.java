@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AuthService {
@@ -30,14 +31,24 @@ public class AuthService {
     private JwtService jwtService;
 
     public void registerUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setConfirmationToken(TokenUtil.generateToken());
-        user.setTokenExpiry(LocalDateTime.now().plusHours(24)); // Token expires in 24 hours
-        user.setActive(true); // User is inactive until email is confirmed
-        userRepository.save(user);
+        // Check if the email is already registered
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email is already registered.");
+        }
 
-        // Send confirmation email
-        emailService.sendConfirmationEmail(user.getEmail(), user.getConfirmationToken());
+        // Hash the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Set default profile values
+        user.setCareerStage("Not Specified"); // Default career stage
+        user.setWorkExperience("Not Specified"); // Default work experience
+        user.setSkills(Set.of()); // Empty skill set
+
+        // Activate the user by default (if email verification is not required)
+        user.setActive(true);
+
+        // Save the user to the database
+        userRepository.save(user);
     }
 
     public Optional<User> confirmUser(String token) {
