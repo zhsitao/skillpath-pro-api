@@ -90,13 +90,7 @@ public class AuthService {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Check if account is locked
-        if (user.isLocked() && user.getLockExpiry().isAfter(LocalDateTime.now())) {
-            response.put("error", "Account locked. Reset your password or try again in 15 minutes.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        // Check if email is verified
+        // Check if email is verified (this should always pass since we set active=true during signup)
         if (!user.isActive()) {
             response.put("error", "Please verify your email first.");
             return ResponseEntity.badRequest().body(response);
@@ -104,24 +98,9 @@ public class AuthService {
 
         // Verify password
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
-
-            // Lock account after 3 failed attempts
-            if (user.getFailedLoginAttempts() >= 3) {
-                user.setLocked(true);
-                user.setLockExpiry(LocalDateTime.now().plusMinutes(15));
-            }
-
-            userRepository.save(user);
             response.put("error", "Invalid email or password.");
             return ResponseEntity.badRequest().body(response);
         }
-
-        // Reset failed login attempts on successful login
-        user.setFailedLoginAttempts(0);
-        user.setLocked(false);
-        user.setLockExpiry(null);
-        userRepository.save(user);
 
         // Generate JWT token
         String token = jwtService.generateToken(user);
