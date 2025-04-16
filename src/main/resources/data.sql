@@ -173,3 +173,33 @@ INSERT INTO role_skill_descriptions (role_id, skill_name, description) VALUES
 (7, 'Cryptography', 'Encryption and security protocols'),
 (7, 'Docker', 'Container security'),
 (7, 'SQL', 'Database security');
+
+-- Learning Resources
+INSERT INTO learning_resources (name, provider, duration, type, cost, description) VALUES
+('AWS Cloud Practitioner', 'AWS Training', '40h', 'Certification', 299.99, 'Comprehensive certification preparation for AWS Cloud Practitioner'),
+('React.js Fundamentals', 'Udemy', '15h', 'Course', 0, 'Learn React.js from scratch with hands-on projects'),
+('Docker Essentials', 'freeCodeCamp', '8h', 'Course', 0, 'Master Docker basics and containerization'),
+('Python for Beginners', 'Coursera', '20h', 'Course', 49.99, 'Introduction to Python programming with exercises'),
+('Git & GitHub Complete Guide', 'freeCodeCamp', '6h', 'Course', 0, 'Learn version control with Git and GitHub'),
+('Java Spring Boot in Action', 'Pluralsight', '25h', 'Course', 29.99, 'Build enterprise applications with Spring Boot'),
+('CompTIA Security+', 'CompTIA', '60h', 'Certification', 349.00, 'Industry-standard cybersecurity certification'),
+('Agile Project Management', 'LinkedIn Learning', '10h', 'Course', 0, 'Learn Agile methodologies and Scrum');
+
+-- Resource Skills Mapping
+INSERT INTO resource_skills (resource_id, skill_name) VALUES
+(1, 'AWS'),
+(1, 'Cloud Computing'),
+(2, 'React'),
+(2, 'JavaScript'),
+(3, 'Docker'),
+(3, 'DevOps'),
+(4, 'Python'),
+(4, 'Programming'),
+(5, 'Git'),
+(5, 'Version Control'),
+(6, 'Java'),
+(6, 'Spring Boot'),
+(7, 'Security'),
+(7, 'Network Security'),
+(8, 'Agile'),
+(8, 'Project Management');
