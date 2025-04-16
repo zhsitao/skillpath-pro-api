@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/skills")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class SkillController {
 
@@ -25,35 +26,7 @@ public class SkillController {
     @Autowired
     private UserSkillRepository userSkillRepository;
 
-    @GetMapping("/roles")
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
-    }
-
-    @GetMapping("/roles/{id}")
-    public ResponseEntity<Role> getRole(@PathVariable Long id) {
-        return roleRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/user/{userId}/role/{roleId}")
-    public ResponseEntity<?> setUserRole(@PathVariable Long userId, @PathVariable Long roleId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        Optional<Role> roleOpt = roleRepository.findById(roleId);
-
-        if (userOpt.isEmpty() || roleOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = userOpt.get();
-        user.setTargetRole(roleOpt.get());
-        userRepository.save(user);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/user/{userId}/skills")
+    @GetMapping("/users/{userId}/skills")
     public ResponseEntity<List<UserSkill>> getUserSkills(@PathVariable Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
@@ -64,7 +37,7 @@ public class SkillController {
         return ResponseEntity.ok(skills);
     }
 
-    @PostMapping("/user/{userId}/skills")
+    @PostMapping("/users/{userId}/skills")
     public ResponseEntity<?> updateUserSkills(@PathVariable Long userId, 
                                             @RequestBody List<Map<String, String>> skills) {
         Optional<User> userOpt = userRepository.findById(userId);
@@ -77,11 +50,14 @@ public class SkillController {
         userSkillRepository.deleteAll(existingSkills);
 
         List<UserSkill> newSkills = new ArrayList<>();
-        for (Map<String, String> skill : skills) {
+        for (Map<String, String> skillUpdate : skills) {
+            String skillName = skillUpdate.get("name");
+            String proficiency = skillUpdate.get("proficiency");
+            
             UserSkill userSkill = new UserSkill();
             userSkill.setUser(user);
-            userSkill.setSkillName(skill.get("name"));
-            userSkill.setProficiency(skill.get("proficiency"));
+            userSkill.setSkillName(skillName);
+            userSkill.setProficiency(proficiency);
             newSkills.add(userSkill);
         }
 
@@ -89,55 +65,168 @@ public class SkillController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/user/{userId}/gap-analysis")
-    public ResponseEntity<Map<String, Object>> getGapAnalysis(@PathVariable Long userId) {
+    @GetMapping("/users/{userId}/roles/{roleId}/gap-analysis")
+    public ResponseEntity<Map<String, Object>> getRoleGapAnalysis(
+            @PathVariable Long userId, 
+            @PathVariable Long roleId) {
         Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        Optional<Role> roleOpt = roleRepository.findById(roleId);
+        
+        if (userOpt.isEmpty() || roleOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         User user = userOpt.get();
-        if (user.getTargetRole() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
+        Role role = roleOpt.get();
         List<UserSkill> userSkills = userSkillRepository.findByUser(user);
-        Role targetRole = user.getTargetRole();
 
-        // Calculate progress
-        Set<String> requiredSkills = targetRole.getRequiredSkills();
-        Map<String, String> userSkillMap = new HashMap<>();
-        for (UserSkill skill : userSkills) {
-            userSkillMap.put(skill.getSkillName(), skill.getProficiency());
-        }
+        Map<String, String> userSkillMap = userSkills.stream()
+            .collect(Collectors.toMap(UserSkill::getSkillName, UserSkill::getProficiency));
 
-        int totalRequired = requiredSkills.size();
-        int completed = 0;
-        List<Map<String, String>> missingSkills = new ArrayList<>();
+        List<Map<String, Object>> missingRequired = new ArrayList<>();
+        List<Map<String, Object>> missingOptional = new ArrayList<>();
+        List<Map<String, Object>> partialSkills = new ArrayList<>();
+        List<Map<String, Object>> completedSkills = new ArrayList<>();
+        List<Map<String, Object>> otherSkills = new ArrayList<>();
 
-        for (String skill : requiredSkills) {
-            String proficiency = userSkillMap.get(skill);
-            if (proficiency != null) {
-                if (proficiency.equals("ADVANCED")) completed++;
-                else if (proficiency.equals("INTERMEDIATE")) completed += 0.6;
-                else if (proficiency.equals("BEGINNER")) completed += 0.3;
+        // Analyze required skills
+        for (Map.Entry<String, String> entry : role.getRequiredSkills().entrySet()) {
+            String skillName = entry.getKey();
+            String requiredLevel = entry.getValue();
+            String userLevel = userSkillMap.get(skillName);
+            
+            Map<String, Object> skillInfo = new HashMap<>();
+            skillInfo.put("name", skillName);
+            skillInfo.put("requiredLevel", requiredLevel);
+            skillInfo.put("currentLevel", userLevel);
+            skillInfo.put("description", role.getSkillDescriptions().get(skillName));
+
+            if (userLevel == null) {
+                missingRequired.add(skillInfo);
             } else {
-                Map<String, String> missing = new HashMap<>();
-                missing.put("name", skill);
-                missing.put("status", "MISSING");
-                missingSkills.add(missing);
+                if (isSkillLevelSufficient(userLevel, requiredLevel)) {
+                    completedSkills.add(skillInfo);
+                } else {
+                    partialSkills.add(skillInfo);
+                }
             }
         }
 
-        double progress = totalRequired > 0 ? (completed * 100.0) / totalRequired : 0;
+        // Analyze optional skills
+        for (Map.Entry<String, String> entry : role.getOptionalSkills().entrySet()) {
+            String skillName = entry.getKey();
+            String recommendedLevel = entry.getValue();
+            String userLevel = userSkillMap.get(skillName);
+            
+            Map<String, Object> skillInfo = new HashMap<>();
+            skillInfo.put("name", skillName);
+            skillInfo.put("recommendedLevel", recommendedLevel);
+            skillInfo.put("currentLevel", userLevel);
+            skillInfo.put("description", role.getSkillDescriptions().get(skillName));
+            
+            if (userLevel == null) {
+                missingOptional.add(skillInfo);
+            } else {
+                skillInfo.put("completed", isSkillLevelSufficient(userLevel, recommendedLevel));
+                completedSkills.add(skillInfo);
+            }
+        }
+
+        // Add other user skills that are not part of the role
+        for (UserSkill skill : userSkills) {
+            String skillName = skill.getSkillName();
+            if (!role.getRequiredSkills().containsKey(skillName) && 
+                !role.getOptionalSkills().containsKey(skillName)) {
+                Map<String, Object> skillInfo = new HashMap<>();
+                skillInfo.put("name", skillName);
+                skillInfo.put("currentLevel", skill.getProficiency());
+                otherSkills.add(skillInfo);
+            }
+        }
+
+        // Calculate progress
+        double progress = calculateProgress(user, role);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("progress", Math.round(progress));
-        result.put("missingSkills", missingSkills);
-        result.put("currentSkills", userSkills);
-        result.put("requiredSkills", requiredSkills);
-        result.put("optionalSkills", targetRole.getOptionalSkills());
+        result.put("progress", Math.min(100, Math.round(progress)));
+        result.put("missingRequired", missingRequired);
+        result.put("missingOptional", missingOptional);
+        result.put("partialSkills", partialSkills);
+        result.put("completedSkills", completedSkills);
+        result.put("otherSkills", otherSkills);
 
         return ResponseEntity.ok(result);
+    }
+
+    private double calculateProgress(User user, Role role) {
+        List<UserSkill> userSkills = userSkillRepository.findByUser(user);
+        Map<String, String> userSkillMap = userSkills.stream()
+            .collect(Collectors.toMap(UserSkill::getSkillName, UserSkill::getProficiency));
+
+        int totalRequired = role.getRequiredSkills().size();
+        double requiredProgress = 0;
+        int totalOptional = role.getOptionalSkills().size();
+        double optionalProgress = 0;
+
+        // Calculate progress for required skills (80% of total)
+        for (Map.Entry<String, String> entry : role.getRequiredSkills().entrySet()) {
+            String skillName = entry.getKey();
+            String requiredLevel = entry.getValue();
+            String userLevel = userSkillMap.get(skillName);
+
+            if (userLevel != null) {
+                if (isSkillLevelSufficient(userLevel, requiredLevel)) {
+                    requiredProgress += 1.0;
+                    // Add bonus for exceeding required level
+                    if (getLevelValue(userLevel) > getLevelValue(requiredLevel)) {
+                        requiredProgress += 0.2; // 20% bonus for exceeding requirement
+                    }
+                } else {
+                    // Partial credit based on level
+                    double ratio = (double) getLevelValue(userLevel) / getLevelValue(requiredLevel);
+                    requiredProgress += ratio * 0.5; // Up to 50% credit for partial completion
+                }
+            }
+        }
+
+        // Calculate progress for optional skills (20% of total)
+        for (Map.Entry<String, String> entry : role.getOptionalSkills().entrySet()) {
+            String skillName = entry.getKey();
+            String recommendedLevel = entry.getValue();
+            String userLevel = userSkillMap.get(skillName);
+
+            if (userLevel != null) {
+                if (isSkillLevelSufficient(userLevel, recommendedLevel)) {
+                    optionalProgress += 1.0;
+                    if (getLevelValue(userLevel) > getLevelValue(recommendedLevel)) {
+                        optionalProgress += 0.2; // 20% bonus for exceeding requirement
+                    }
+                } else {
+                    double ratio = (double) getLevelValue(userLevel) / getLevelValue(recommendedLevel);
+                    optionalProgress += ratio * 0.5;
+                }
+            }
+        }
+
+        // Calculate final progress (80% from required skills, 20% from optional skills)
+        double requiredScore = totalRequired > 0 ? (requiredProgress / totalRequired) * 80 : 80;
+        double optionalScore = totalOptional > 0 ? (optionalProgress / totalOptional) * 20 : 20;
+
+        return requiredScore + optionalScore;
+    }
+
+    private boolean isSkillLevelSufficient(String userLevel, String requiredLevel) {
+        int userValue = getLevelValue(userLevel);
+        int requiredValue = getLevelValue(requiredLevel);
+        return userValue >= requiredValue;
+    }
+
+    private int getLevelValue(String level) {
+        switch (level) {
+            case "ADVANCED": return 3;
+            case "INTERMEDIATE": return 2;
+            case "BEGINNER": return 1;
+            default: return 0;
+        }
     }
 }

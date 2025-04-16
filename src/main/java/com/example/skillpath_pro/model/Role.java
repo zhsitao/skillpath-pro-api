@@ -1,7 +1,7 @@
 package com.example.skillpath_pro.model;
 
 import jakarta.persistence.*;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "roles")
@@ -15,17 +15,28 @@ public class Role {
     private String title;
 
     @Column
+    private String description;
+
+    @Column
     private String category;
-    
-    @ElementCollection
-    @CollectionTable(name = "role_required_skills", 
-        joinColumns = @JoinColumn(name = "role_id"))
-    private Set<String> requiredSkills;
 
     @ElementCollection
-    @CollectionTable(name = "role_optional_skills", 
-        joinColumns = @JoinColumn(name = "role_id"))
-    private Set<String> optionalSkills;
+    @CollectionTable(name = "role_required_skills")
+    @MapKeyColumn(name = "skill_name")
+    @Column(name = "required_level")
+    private Map<String, String> requiredSkills = new HashMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "role_optional_skills")
+    @MapKeyColumn(name = "skill_name")
+    @Column(name = "recommended_level")
+    private Map<String, String> optionalSkills = new HashMap<>();
+
+    @ElementCollection
+    @CollectionTable(name = "role_skill_descriptions")
+    @MapKeyColumn(name = "skill_name")
+    @Column(name = "description")
+    private Map<String, String> skillDescriptions = new HashMap<>();
 
     public Long getId() {
         return id;
@@ -43,6 +54,14 @@ public class Role {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -51,19 +70,27 @@ public class Role {
         this.category = category;
     }
 
-    public Set<String> getRequiredSkills() {
+    public Map<String, String> getRequiredSkills() {
         return requiredSkills;
     }
 
-    public void setRequiredSkills(Set<String> requiredSkills) {
+    public void setRequiredSkills(Map<String, String> requiredSkills) {
         this.requiredSkills = requiredSkills;
     }
 
-    public Set<String> getOptionalSkills() {
+    public Map<String, String> getOptionalSkills() {
         return optionalSkills;
     }
 
-    public void setOptionalSkills(Set<String> optionalSkills) {
+    public void setOptionalSkills(Map<String, String> optionalSkills) {
         this.optionalSkills = optionalSkills;
+    }
+
+    public Map<String, String> getSkillDescriptions() {
+        return skillDescriptions;
+    }
+
+    public void setSkillDescriptions(Map<String, String> skillDescriptions) {
+        this.skillDescriptions = skillDescriptions;
     }
 }
