@@ -115,6 +115,7 @@ public class AuthService {
         // Generate JWT token
         String token = jwtService.generateToken(user);
         response.put("token", token);
+        response.put("userId", user.getUserId().toString());
         response.put("message", "Login successful.");
         return ResponseEntity.ok(response);
     }
