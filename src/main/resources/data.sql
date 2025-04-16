@@ -176,30 +176,160 @@ INSERT INTO role_skill_descriptions (role_id, skill_name, description) VALUES
 
 -- Learning Resources
 INSERT INTO learning_resources (name, provider, duration, type, cost, description) VALUES
-('AWS Cloud Practitioner', 'AWS Training', '40h', 'Certification', 299.99, 'Comprehensive certification preparation for AWS Cloud Practitioner'),
-('React.js Fundamentals', 'Udemy', '15h', 'Course', 0, 'Learn React.js from scratch with hands-on projects'),
-('Docker Essentials', 'freeCodeCamp', '8h', 'Course', 0, 'Master Docker basics and containerization'),
-('Python for Beginners', 'Coursera', '20h', 'Course', 49.99, 'Introduction to Python programming with exercises'),
-('Git & GitHub Complete Guide', 'freeCodeCamp', '6h', 'Course', 0, 'Learn version control with Git and GitHub'),
-('Java Spring Boot in Action', 'Pluralsight', '25h', 'Course', 29.99, 'Build enterprise applications with Spring Boot'),
-('CompTIA Security+', 'CompTIA', '60h', 'Certification', 349.00, 'Industry-standard cybersecurity certification'),
-('Agile Project Management', 'LinkedIn Learning', '10h', 'Course', 0, 'Learn Agile methodologies and Scrum');
+-- AWS Resources
+('AWS Cloud Practitioner', 'AWS Training', '40h', 'Certificate', 299.99, 'Comprehensive certification preparation for AWS Cloud Practitioner'),
+('AWS Essentials', 'Coursera', '20h', 'Video', 0, 'Learn AWS fundamentals for free'),
+('AWS Deep Dive', 'Udemy', '30h', 'Course', 49.99, 'Advanced AWS concepts and practices'),
+('AWS Solutions Architect', 'AWS Training', '60h', 'Certificate', 399.99, 'Professional AWS architecture certification'),
+
+-- React Resources
+('React.js Fundamentals', 'Udemy', '15h', 'Video', 0, 'Learn React.js from scratch with hands-on projects'),
+('React Advanced Patterns', 'Frontend Masters', '12h', 'Course', 39.99, 'Advanced React patterns and best practices'),
+('React Native Basics', 'React Training', '25h', 'Video', 0, 'Build mobile apps with React Native'),
+('Advanced React Patterns', 'Frontend Masters', '20h', 'Course', 199.99, 'Advanced React development techniques'),
+
+-- Docker Resources
+('Docker Essentials', 'freeCodeCamp', '8h', 'Video', 0, 'Master Docker basics and containerization'),
+('Docker in Practice', 'Pluralsight', '15h', 'Course', 29.99, 'Real-world Docker applications'),
+('Docker Security', 'Docker Inc', '10h', 'Certificate', 149.99, 'Security best practices for Docker'),
+
+-- Python Resources
+('Python for Beginners', 'Coursera', '20h', 'Course', 49.99, 'Introduction to Python programming'),
+('Python Data Science', 'DataCamp', '25h', 'Video', 0, 'Python for data analysis'),
+('Advanced Python', 'Real Python', '30h', 'Certificate', 79.99, 'Advanced Python concepts'),
+('Python Programming Basics', 'Coursera', '15h', 'Video', 0, 'Introduction to Python programming'),
+('Python for Data Science', 'DataCamp', '30h', 'Course', 149.99, 'Python data analysis and visualization'),
+
+-- Git Resources
+('Git & GitHub Complete Guide', 'freeCodeCamp', '6h', 'Video', 0, 'Learn version control with Git'),
+('Git Advanced Topics', 'Atlassian', '8h', 'Video', 0, 'Advanced Git workflows'),
+('Git for Teams', 'GitHub', '10h', 'Certificate', 29.99, 'Git in team environments'),
+('Git & GitHub Complete Guide', 'GitHub', '10h', 'Video', 0, 'Version control and collaboration'),
+('Advanced Git Workflows', 'Atlassian', '15h', 'Course', 149.99, 'Advanced Git techniques'),
+
+-- Java Resources
+('Java Spring Boot in Action', 'Pluralsight', '25h', 'Course', 29.99, 'Build enterprise applications'),
+('Java Core Concepts', 'Oracle', '20h', 'Video', 0, 'Java fundamentals'),
+('Java Design Patterns', 'Manning', '15h', 'Certificate', 49.99, 'Common design patterns in Java'),
+('Advanced Java Development', 'Pluralsight', '30h', 'Course', 299.99, 'Advanced Java programming concepts'),
+('Spring Boot in Action', 'VMware', '25h', 'Certificate', 399.99, 'Enterprise application development with Spring Boot'),
+
+-- Security Resources
+('CompTIA Security+', 'CompTIA', '60h', 'Certificate', 349.00, 'Industry-standard security certification'),
+('Cybersecurity Fundamentals', 'Cisco', '30h', 'Video', 0, 'Basic security concepts'),
+('Ethical Hacking', 'Offensive Security', '40h', 'Certificate', 999.99, 'Practical security testing'),
+('Network Security Fundamentals', 'Cisco', '30h', 'Certificate', 299.99, 'Network security principles'),
+('Cryptography Basics', 'Coursera', '15h', 'Video', 0, 'Introduction to cryptography'),
+
+-- Project Management Resources
+('Agile Project Management', 'LinkedIn Learning', '10h', 'Video', 0, 'Learn Agile methodologies'),
+('JIRA Fundamentals', 'Atlassian', '5h', 'Video', 0, 'Project tracking with JIRA'),
+('Scrum Master Certification', 'Scrum.org', '20h', 'Certificate', 199.99, 'Professional Scrum Master certification'),
+('Agile Scrum Master', 'Scrum.org', '20h', 'Certificate', 199.99, 'Professional Scrum Master certification'),
+('Project Management Professional', 'PMI', '35h', 'Certificate', 499.99, 'PMP certification preparation'),
+('Agile Development', 'Atlassian', '10h', 'Video', 0, 'Agile methodology and practices'),
+('Risk Management', 'PMI', '15h', 'Course', 199.99, 'Project risk management principles'),
+
+-- DevOps Resources
+('Jenkins Pipeline Master', 'CloudBees', '15h', 'Course', 199.99, 'Advanced Jenkins pipeline development'),
+('Kubernetes Fundamentals', 'CNCF', '25h', 'Certificate', 299.99, 'Core Kubernetes concepts and practices'),
+('Linux System Administration', 'Red Hat', '40h', 'Course', 499.99, 'Complete Linux administration'),
+('Terraform Infrastructure as Code', 'HashiCorp', '20h', 'Certificate', 249.99, 'Infrastructure automation with Terraform'),
+
+-- Web Development Resources
+('Vue.js Complete Guide', 'Vue School', '25h', 'Course', 149.99, 'Comprehensive Vue.js development'),
+('Modern JavaScript', 'freeCodeCamp', '12h', 'Video', 0, 'ES6+ JavaScript features and patterns'),
+('Responsive Web Design', 'Udacity', '15h', 'Certificate', 199.99, 'Modern CSS and responsive design'),
+('UI/UX Design Principles', 'Design+Code', '20h', 'Course', 299.99, 'User interface and experience design'),
+
+-- Database & Data Resources
+('SQL Database Design', 'Stanford Online', '20h', 'Course', 149.99, 'Database modeling and SQL development'),
+('MongoDB Complete Guide', 'MongoDB University', '25h', 'Certificate', 199.99, 'NoSQL database development'),
+('Data Science Fundamentals', 'Dataquest', '40h', 'Course', 299.99, 'Core concepts of data science'),
+('Machine Learning Basics', 'Google', '30h', 'Certificate', 399.99, 'Introduction to machine learning'),
+('Statistics for Data Science', 'Khan Academy', '15h', 'Video', 0, 'Statistical analysis fundamentals'),
+('R Programming', 'RStudio', '20h', 'Video', 0, 'R language for statistical computing'),
+
+-- Programming Languages Resources
+('Node.js Backend Development', 'NodeSchool', '20h', 'Video', 0, 'Server-side JavaScript development'),
+('TypeScript Essentials', 'Microsoft', '10h', 'Video', 0, 'TypeScript fundamentals');
 
 -- Resource Skills Mapping
 INSERT INTO resource_skills (resource_id, skill_name) VALUES
-(1, 'AWS'),
-(1, 'Cloud Computing'),
-(2, 'React'),
-(2, 'JavaScript'),
-(3, 'Docker'),
-(3, 'DevOps'),
-(4, 'Python'),
-(4, 'Programming'),
-(5, 'Git'),
-(5, 'Version Control'),
-(6, 'Java'),
-(6, 'Spring Boot'),
-(7, 'Security'),
-(7, 'Network Security'),
-(8, 'Agile'),
-(8, 'Project Management');
+-- AWS Resources
+(1, 'AWS'), (1, 'Cloud Computing'),
+(2, 'AWS'), (2, 'Cloud Computing'),
+(3, 'AWS'), (3, 'Cloud Computing'),
+(4, 'AWS'), (4, 'Cloud Computing'),
+
+-- React Resources
+(5, 'React'), (5, 'JavaScript'),
+(6, 'React'), (6, 'JavaScript'),
+(7, 'React'), (7, 'JavaScript'), (7, 'Mobile Development'),
+(8, 'React'), (8, 'JavaScript'),
+
+-- Docker Resources
+(9, 'Docker'), (9, 'DevOps'),
+(10, 'Docker'), (10, 'DevOps'),
+(11, 'Docker'), (11, 'Security'),
+
+-- Python Resources
+(12, 'Python'), (12, 'Programming'),
+(13, 'Python'), (13, 'Data Science'),
+(14, 'Python'), (14, 'Programming'),
+(15, 'Python'), (15, 'Programming'),
+(16, 'Python'), (16, 'Data Science'),
+
+-- Git Resources
+(17, 'Git'), (17, 'Version Control'),
+(18, 'Git'), (18, 'Version Control'),
+(19, 'Git'), (19, 'Version Control'),
+(20, 'Git'), (20, 'Version Control'),
+(21, 'Git'), (21, 'Version Control'),
+
+-- Java Resources
+(22, 'Java'), (22, 'Spring Boot'),
+(23, 'Java'), (23, 'Programming'),
+(24, 'Java'), (24, 'Programming'),
+(25, 'Java'), (25, 'Programming'),
+(26, 'Spring Boot'), (26, 'Java'),
+
+-- Security Resources
+(27, 'Security'), (27, 'Network Security'),
+(28, 'Security'), (28, 'Network Security'),
+(29, 'Security'), (29, 'Network Security'), (29, 'Ethical Hacking'),
+(30, 'Network Security'), (30, 'Security'),
+(31, 'Cryptography'), (31, 'Security'),
+
+-- Project Management Resources
+(32, 'Agile'), (32, 'Project Management'),
+(33, 'JIRA'), (33, 'Project Management'),
+(34, 'Agile'), (34, 'Project Management'),
+(35, 'Agile'), (35, 'Project Management'),
+(36, 'Project Management'), (36, 'Leadership'),
+(37, 'Agile'), (37, 'Project Management'),
+(38, 'Project Management'), (38, 'Risk Management'),
+
+-- DevOps Resources
+(39, 'Jenkins'), (39, 'DevOps'),
+(40, 'Kubernetes'), (40, 'DevOps'),
+(41, 'Linux'), (41, 'System Administration'),
+(42, 'Terraform'), (42, 'DevOps'), (42, 'Cloud Computing'),
+
+-- Web Development Resources
+(43, 'Vue.js'), (43, 'JavaScript'),
+(44, 'JavaScript'), (44, 'Programming'),
+(45, 'CSS'), (45, 'HTML'),
+(46, 'UI/UX Design'), (46, 'Design'),
+
+-- Database & Data Resources
+(47, 'SQL'), (47, 'Database'),
+(48, 'MongoDB'), (48, 'Database'),
+(49, 'Data Science'), (49, 'Statistics'),
+(50, 'Machine Learning'), (50, 'Data Science'),
+(51, 'Statistics'), (51, 'Data Science'),
+(52, 'R'), (52, 'Data Science'),
+
+-- Programming Languages Resources
+(53, 'Node.js'), (53, 'JavaScript'),
+(54, 'TypeScript'), (54, 'JavaScript');
