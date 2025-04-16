@@ -32,6 +32,10 @@ public class User {
     )
     private Set<Role> roles;
 
+    @ManyToOne
+    @JoinColumn(name = "target_role_id")
+    private Role targetRole;
+
     @Column(nullable = false)
     private boolean active;
 
@@ -91,6 +95,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Role getTargetRole() {
+        return targetRole;
+    }
+
+    public void setTargetRole(Role targetRole) {
+        this.targetRole = targetRole;
     }
 
     public boolean isActive() {

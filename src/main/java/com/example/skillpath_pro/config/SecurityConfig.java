@@ -20,10 +20,9 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/signup", "/auth/login", "/auth/confirm").permitAll() // Public routes
-                .requestMatchers("/api/**").authenticated() // Secure API routes
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
+            .headers(headers -> headers.frameOptions().sameOrigin()) // Allow iframe for same origin (h2-console)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // REST APIs are stateless
 
         return http.build();
