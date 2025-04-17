@@ -13,7 +13,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendConfirmationEmail(String to, String token) {
-        String confirmationUrl = "http://localhost:8080/auth/confirm?token=" + token;
+        String confirmationUrl = "http://104.197.224.247:8080/auth/confirm?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

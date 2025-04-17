@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/learning")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://104.197.224.247:5173")
 public class LearningController {
     
     @Autowired
